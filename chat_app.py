@@ -32,6 +32,3 @@ if prompt:
         st.write(answer)
 
     st.session_state.messages.append({"role":"assistant","content":answer})
-        st.write(answer)
-
-    st.session_state.messages.append({"role": "assistant", "content": answer})
