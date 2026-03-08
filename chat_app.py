@@ -1,13 +1,15 @@
 import streamlit as st
+from groq import Groq
 
 st.set_page_config(page_title="Pradeep AI Assistant", page_icon="🤖")
 
 st.title("🤖 Pradeep AI Assistant")
 
+client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# show chat history
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.write(msg["content"])
@@ -15,15 +17,21 @@ for msg in st.session_state.messages:
 prompt = st.chat_input("Ask anything...")
 
 if prompt:
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.messages.append({"role":"user","content":prompt})
 
     with st.chat_message("user"):
         st.write(prompt)
 
-    # temporary AI response
-    answer = "AI is temporarily offline. Cloud AI will be connected soon."
-
     with st.chat_message("assistant"):
+        response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=st.session_state.messages
+        )
+
+        answer = response.choices[0].message.content
+        st.write(answer)
+
+    st.session_state.messages.append({"role":"assistant","content":answer})
         st.write(answer)
 
     st.session_state.messages.append({"role": "assistant", "content": answer})
