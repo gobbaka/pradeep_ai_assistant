@@ -1,3 +1,5 @@
 streamlit
-pyPDF2
+groq
 requests
+pypdf2
+
